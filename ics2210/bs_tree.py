@@ -1,42 +1,72 @@
 from __future__ import annotations
 
-from enum import IntEnum
+from enum import Enum, IntEnum
+
 
 class Branch(IntEnum):
     LEFT = 0
     ROOT = 1
     RIGHT = 2
 
+
 class Direction(IntEnum):
     LEFT = 0
     RIGHT = 1
 
 
-def value_direction(node: Node, other: Node) -> Direction:
-    return Direction.LEFT if node.value > other.value else Direction.RIGHT 
+def value_dir(node: Node, other: Node) -> Direction:
+    return Direction.LEFT if node.value > other.value else Direction.RIGHT
+
+
+def dir(node: Node, other: Node) -> Direction:
+    return Direction.LEFT if node.child[Direction.LEFT] is other else Direction.RIGHT
+
 
 def can_step(node: Node, direction: Direction) -> bool:
     return node.child[direction] is not None
+
 
 class Node:
     value: int
     parent: Node | None
     child: list[Node | None]
 
-    def __init__(self: Node, value: int) -> None:
+    def __init__(self: Node, value: int):
         self.value = value
         self.parent = None
         self.child = [None, None]
 
+    def rotate(self: Node, direction: Direction):
+        child = self.child[1 - direction]
+
+        if child is None:
+            return
+
+        if self.parent is None:
+            child.parent = None
+        else:
+            child.parent = self.parent
+
+            self.parent.child[dir(self.parent, self)] = child
+
+        self.child[1 - direction] = child.child[direction]
+
+        if self.child[1 - direction] is not None:
+            self.child[1 - direction].parent = self  # type: ignore
+
+        child.child[direction] = self
+
+        self.parent = child
+
     def insert(self: Node, other: Node) -> Node:
-        current: Node = self 
+        current: Node = self
 
-        insert_direction: Direction = value_direction(current, other) 
-        
+        insert_direction: Direction = value_dir(current, other)
+
         while can_step(current, insert_direction):
-            current = current.child[insert_direction] # type: ignore
+            current = current.child[insert_direction]  # type: ignore
 
-            insert_direction = value_direction(current, other)
+            insert_direction = value_dir(current, other)
 
         other.parent = current
 
@@ -47,9 +77,11 @@ class Node:
     def insert_value(self: Node, value: int) -> Node:
         return self.insert(Node(value))
 
+    # TODO: pick a better method for printing
+
     def value_format(self: Node) -> str:
         return str(self.value)
-    
+
     def draw(self: Node, s: str = "", parent: Branch = Branch.ROOT):
         if self.child[Direction.RIGHT] is not None:
             if parent == Branch.RIGHT or parent == Branch.ROOT:
@@ -87,10 +119,19 @@ class AVLNode(Node):
     right_height: int
 
     def __init__(self: AVLNode, value: int):
-        super(value)
-        left_height = 0
-        right_height = 0
+        super().__init__(value)
+        self.left_height = 0
+        self.right_height = 0
+
+
+class Color(IntEnum):
+    RED = 0
+    BLACK = 1
 
 
 class RedBlackNode(Node):
-    pass
+    color: Color
+
+    def __init__(self: RedBlackNode, value: int):
+        super().__init__(value)
+        self.color = Color.BLACK
