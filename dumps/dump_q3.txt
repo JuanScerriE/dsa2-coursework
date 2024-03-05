@@ -1,0 +1,16 @@
+Extremes Tests
+
+5 3 8 7 15 
+Test Passed
+SORTED
+Test Passed
+
+Unsorted (Shellsort):  [7, 29, 10, 29, 15, 27, 28]
+
+Checking for extremes before sort...
+29 10 29 15 
+
+Sorted (Shellsort):  [7, 10, 15, 27, 28, 29, 29]
+
+Checking for extremes after sort...
+SORTED

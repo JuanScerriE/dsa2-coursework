@@ -1,0 +1,35 @@
+Newton Tests
+
+Test Passed
+Test Passed
+Test Passed
+
+Halley Tests
+
+Test Passed
+Test Passed
+Test Passed
+
+Newton's Method
+
+sqrt(2) = 1.4142135623730951
+sqrt(3) = 1.7320508075688772
+sqrt(4) = 2.000000000000002
+sqrt(5) = 2.236067977499978
+sqrt(6) = 2.449489742783178
+sqrt(7) = 2.6457513110645907
+sqrt(8) = 2.8284271247461903
+sqrt(9) = 3.0
+sqrt(10) = 3.1622776601683795
+
+Halley's Method
+
+sqrt(2) = 1.4142139267767408
+sqrt(3) = 1.7320508075688785
+sqrt(4) = 2.0
+sqrt(5) = 2.23606797749979
+sqrt(6) = 2.4494897427831783
+sqrt(7) = 2.6457513110645907
+sqrt(8) = 2.8284271247461903
+sqrt(9) = 3.0
+sqrt(10) = 3.1622776601683795

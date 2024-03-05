@@ -1,0 +1,23 @@
+`sin` Tests
+
+Test Passed
+Test Passed
+
+`cos` Tests
+
+Test Passed
+Test Passed
+
+Sine Output (In Radians)
+
+sin(45) = 0.8509035245351106
+sin(12) = -0.5365729180004347
+sin(0.5) = 0.479425538604203
+sin(0) = 0.0
+
+Cosine Output (In Radians)
+
+cos(-13) = 0.9074467814554296
+cos(pi) = -1.0000000006627803
+cos(1.2345) = 0.3299970546124419
+cos(45) = 0.5253231599342794

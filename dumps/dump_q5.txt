@@ -1,0 +1,40 @@
+RPN Calculator Tests
+Base [65.0] Top
+Base [65.0, 32.0] Top
+Base [33.0] Top
+Base [33.0, 7.0] Top
+Base [33.0, 7.0, 32.125] Top
+Base [33.0, -25.125] Top
+Base [7.875] Top
+
+Test Passed
+
+Base [65.0] Top
+Base [65.0, 32.0] Top
+Base [2080.0] Top
+Base [2080.0, 7.0] Top
+Base [2080.0, 7.0, 32.125] Top
+Base [2080.0, -25.125] Top
+Base [-82.7860696517413] Top
+
+Test Passed
+
+Base [65.0] Top
+Base [65.0, 32.0] Top
+Base [33.0] Top
+Base [33.0, 7.0] Top
+Base [33.0, 7.0, 32.125] Top
+Base [33.0, -25.125] Top
+Base [-829.125] Top
+
+Test Passed
+
+Input RPN Expression: 23 34 + 13 / 23.21  *
+Base [23.0] Top
+Base [23.0, 34.0] Top
+Base [57.0] Top
+Base [57.0, 13.0] Top
+Base [4.384615384615385] Top
+Base [4.384615384615385, 23.21] Top
+Base [101.76692307692309] Top
+Result: 101.76692307692309

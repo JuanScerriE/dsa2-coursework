@@ -1,0 +1,7 @@
+Fibonacci Test
+
+Test Passed
+
+Sequence of Fibonacci Sums:
+
+1 2 4 7 12 20 33 54 88 143 232 376 609 986 1596 2583 4180 6764 10945 

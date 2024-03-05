@@ -1,0 +1,73 @@
+Input integer (or anything else to quit): 23
+ 23
+Input integer (or anything else to quit): 34
+     34
+   /
+ 23
+Input integer (or anything else to quit): 45
+         45
+       /
+     34
+   /
+ 23
+Input integer (or anything else to quit): 35
+         45
+        /  \
+        |    35
+       /
+     34
+   /
+ 23
+Input integer (or anything else to quit): 34
+         45
+        /  \
+        |    35
+       /
+     34
+    /  \
+    |    34
+   /
+ 23
+Input integer (or anything else to quit): 21
+         45
+        /  \
+        |    35
+       /
+     34
+    /  \
+    |    34
+   /
+ 23
+   \
+     21
+Input integer (or anything else to quit): 17
+         45
+        /  \
+        |    35
+       /
+     34
+    /  \
+    |    34
+   /
+ 23
+   \
+     21
+       \
+         17
+Input integer (or anything else to quit): 20
+         45
+        /  \
+        |    35
+       /
+     34
+    /  \
+    |    34
+   /
+ 23
+   \
+     21
+       \
+        |    20
+        \  /
+         17
+Input integer (or anything else to quit): q

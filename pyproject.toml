@@ -1,0 +1,19 @@
+[tool.poetry]
+name = "ics2210"
+version = "0.0.1"
+description = "UoM - ICS2210 - Assignment"
+authors = ["Juan Scerr <juan.scerri.21@um.edu.mt>"]
+license = "MIT"
+readme = "README.md"
+
+[tool.poetry.dependencies]
+python = "^3.10"
+
+[tool.poetry.group.dev.dependencies]
+mypy = "^1.2.0"
+ruff = "^0.0.262"
+pytest = "^7.3.1"
+
+[build-system]
+requires = ["poetry-core"]
+build-backend = "poetry.core.masonry.api"
