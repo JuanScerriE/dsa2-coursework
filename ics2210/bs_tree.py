@@ -1,6 +1,8 @@
 from __future__ import annotations
 
-from enum import Enum, IntEnum
+from enum import IntEnum
+
+from typing import Any
 
 
 class Branch(IntEnum):
@@ -26,6 +28,10 @@ def can_step(node: Node, direction: Direction) -> bool:
     return node.child[direction] is not None
 
 
+def get_addr(object: Any) -> str:
+    return "None" if object is None else str(id(object))
+
+
 class Node:
     value: int
     parent: Node | None
@@ -36,11 +42,18 @@ class Node:
         self.parent = None
         self.child = [None, None]
 
-    def rotate(self: Node, direction: Direction):
+    def __str__(self: Node) -> str:
+        return f"""{get_addr(self)} {{
+  .value = {self.value},
+  .parent = {get_addr(self.parent)},
+  .child = [{get_addr(self.child[Direction.LEFT])}, {get_addr(self.child[Direction.RIGHT])}],
+}}"""
+
+    def rotate(self: Node, direction: Direction) -> Node:
         child = self.child[1 - direction]
 
         if child is None:
-            return
+            return self
 
         if self.parent is None:
             child.parent = None
@@ -57,6 +70,8 @@ class Node:
         child.child[direction] = self
 
         self.parent = child
+
+        return child
 
     def insert(self: Node, other: Node) -> Node:
         current: Node = self
