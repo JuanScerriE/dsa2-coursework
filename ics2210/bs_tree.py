@@ -1,8 +1,12 @@
 from __future__ import annotations
 
 from enum import IntEnum
+from collections import deque
+from typing import cast, Self, Any, Deque
 
-from typing import Any
+
+def get_addr(object: Any) -> str:
+    return "None" if object is None else str(id(object))
 
 
 class Branch(IntEnum):
@@ -16,40 +20,60 @@ class Direction(IntEnum):
     RIGHT = 1
 
 
-def value_dir(node: Node, other: Node) -> Direction:
-    return Direction.LEFT if node.value > other.value else Direction.RIGHT
-
-
-def dir(node: Node, other: Node) -> Direction:
-    return Direction.LEFT if node.child[Direction.LEFT] is other else Direction.RIGHT
-
-
-def can_step(node: Node, direction: Direction) -> bool:
-    return node.child[direction] is not None
-
-
-def get_addr(object: Any) -> str:
-    return "None" if object is None else str(id(object))
-
-
-class Node:
+class Node(object):
     value: int
-    parent: Node | None
-    child: list[Node | None]
+    parent: Self | None
+    child: list[Self | None]
 
-    def __init__(self: Node, value: int):
+    def __init__(self: Self, value: int):
         self.value = value
         self.parent = None
         self.child = [None, None]
 
-    def __str__(self: Node) -> str:
+    def __str__(self: Self) -> str:
         return f"""{get_addr(self)} {{
   .value = {self.value},
   .parent = {get_addr(self.parent)},
   .child = [{get_addr(self.child[Direction.LEFT])}, {get_addr(self.child[Direction.RIGHT])}],
 }}"""
 
-    def rotate(self: Node, direction: Direction) -> Node:
+    def __repr__(self: Self) -> str:
+        return f"{get_addr(self)} {{.value = {self.value}}}"
+
+    def left(self: Self) -> Self | None:
+        return self.child[Direction.LEFT]
+
+    def right(self: Self) -> Self | None:
+        return self.child[Direction.RIGHT]
+
+    def is_leaf(self: Self) -> bool:
+        return self.left() is None and self.right() is None
+
+    def value_dir(self: Self, other: Self) -> Direction:
+        return Direction.LEFT if self.value >= other.value else Direction.RIGHT
+
+    def dir(self: Self, other: Self) -> Direction:
+        return Direction.LEFT if self.left() is other else Direction.RIGHT
+
+    def can_step(self: Self, direction: Direction) -> bool:
+        return self.child[direction] is not None
+
+    def tree_height(self: Self) -> int:
+        def _tree_height(node: Self) -> int:
+            left = node.left()
+            right = node.right()
+
+            return (
+                max(
+                    _tree_height(left) if left is not None else 0,
+                    _tree_height(right) if right is not None else 0,
+                )
+                + 1
+            )
+
+        return _tree_height(self) - 1
+
+    def rotate(self: Self, direction: Direction) -> Self:
         child = self.child[1 - direction]
 
         if child is None:
@@ -60,7 +84,7 @@ class Node:
         else:
             child.parent = self.parent
 
-            self.parent.child[dir(self.parent, self)] = child
+            self.parent.child[self.parent.dir(self)] = child
 
         self.child[1 - direction] = child.child[direction]
 
@@ -73,15 +97,15 @@ class Node:
 
         return child
 
-    def insert(self: Node, other: Node) -> Node:
-        current: Node = self
+    def insert(self: Self, other: Self) -> Self:
+        current = self
 
-        insert_direction: Direction = value_dir(current, other)
+        insert_direction: Direction = current.value_dir(other)
 
-        while can_step(current, insert_direction):
-            current = current.child[insert_direction]  # type: ignore
+        while current.can_step(insert_direction):
+            current = cast(Self, current.child[insert_direction])
 
-            insert_direction = value_dir(current, other)
+            insert_direction = current.value_dir(other)
 
         other.parent = current
 
@@ -89,54 +113,161 @@ class Node:
 
         return other
 
-    def insert_value(self: Node, value: int) -> Node:
-        return self.insert(Node(value))
-
-    # TODO: pick a better method for printing
-
-    def value_format(self: Node) -> str:
+    def str_value(self: Self) -> str:
         return str(self.value)
 
-    def draw(self: Node, s: str = "", parent: Branch = Branch.ROOT):
-        if self.child[Direction.RIGHT] is not None:
-            if parent == Branch.RIGHT or parent == Branch.ROOT:
-                self.child[Direction.RIGHT].draw(
-                    s[: (len(s) - 1)] + " " + " " * len(self.value_format()) + " |",
-                    Branch.RIGHT,
-                )
-                print(s[: (len(s) - 1)] + " " + " " * len(self.value_format()) + "/")
-            else:
-                self.child[Direction.RIGHT].draw(
-                    s[: (len(s) - 1)] + "|" + " " * len(self.value_format()) + " |",
-                    Branch.RIGHT,
-                )
-                print(s[: (len(s) - 1)] + "\\" + " " * len(self.value_format()) + "/")
+    def draw(self: Self):
+        height = self.tree_height()
 
-        print(s[: (len(s) - 1)] + " " + self.value_format())
+        def calc_indent(height: int) -> int:
+            return ((2 ** (height + 1)) - 1) // 2
 
-        if self.child[Direction.LEFT] is not None:
-            if parent == Branch.LEFT or parent == Branch.ROOT:
-                print(s[: (len(s) - 1)] + " " + " " * len(self.value_format()) + "\\")
-                self.child[Direction.LEFT].draw(
-                    s[: (len(s) - 1)] + " " + " " * len(self.value_format()) + " |",
-                    Branch.LEFT,
-                )
-            else:
-                print(s[: (len(s) - 1)] + "/" + " " * len(self.value_format()) + "\\")
-                self.child[Direction.LEFT].draw(
-                    s[: (len(s) - 1)] + "|" + " " * len(self.value_format()) + " |",
-                    Branch.LEFT,
-                )
+        indent = calc_indent(height)
+
+        final_queue: Deque[tuple[int, int, Self]] = deque()
+
+        queue: Deque[tuple[int, int, int, Self]] = deque([(0, indent, height, self)])
+
+        cell_width: int = 0
+
+        while queue:
+            (level, indent, height, node) = queue.popleft()
+
+            cell_width = max(cell_width, len(node.str_value()))
+
+            final_queue.append((level, indent, node))
+
+            step = calc_indent(height - 1) + 1
+
+            if (left := node.child[Direction.LEFT]) is not None:
+                queue.append((level + 1, indent - step, height - 1, left))
+
+            if (right := node.child[Direction.RIGHT]) is not None:
+                queue.append((level + 1, indent + step, height - 1, right))
+
+        prev_indent, prev_level = 0, 0
+
+        str_tree: str = ""
+
+        while final_queue:
+            (level, indent, node) = final_queue.popleft()
+
+            if level > prev_level:
+                str_tree, prev_level, prev_indent = str_tree + "\n", level, 0
+
+            str_tree += f"{(' ' * cell_width) * (indent - prev_indent)}{node.str_value():0>{cell_width}}"
+
+            prev_indent = indent + 1
+
+        return str_tree
 
 
 class AVLNode(Node):
     left_height: int
     right_height: int
 
-    def __init__(self: AVLNode, value: int):
+    def __init__(self: Self, value: int):
         super().__init__(value)
         self.left_height = 0
         self.right_height = 0
+
+    def str_value(self: Self) -> str:
+        return f"{self.left_height}|{self.value}|{self.right_height}"
+
+    def height_diff(self: Self) -> int:
+        return self.left_height - self.right_height
+
+    def update_heights(self: Self):
+        if (left := self.left()) is None:
+            self.left_height = 0
+        else:
+            self.left_height = 1 + max(left.left_height, left.right_height)
+
+        if (right := self.right()) is None:
+            self.right_height = 0
+        else:
+            self.right_height = 1 + max(right.left_height, right.right_height)
+
+    def fix(self: Self) -> Self:
+        current = self
+
+        while current:
+            current.update_heights()
+
+            diff = current.height_diff()
+
+            if diff > 1:  # left heavy
+                left = cast(Self, current.left())
+
+                if left.left_height >= left.right_height:
+                    current.rotate(Direction.RIGHT)
+
+                    # height updation
+                    current.update_heights()
+                    left.update_heights()
+
+                    current = left
+                else:
+                    left_right = left.rotate(Direction.LEFT)
+
+                    # height updation
+                    left.update_heights()
+                    left_right.update_heights()
+                    current.update_heights()
+
+                    current.rotate(Direction.RIGHT)
+
+                    # height updation
+                    current.update_heights()
+                    left_right.update_heights()
+
+                    current = left_right
+
+            if diff < -1:  # right heavy
+                right = cast(Self, current.right())
+
+                if right.right_height >= right.left_height:
+                    current.rotate(Direction.LEFT)
+
+                    # height updation
+                    current.update_heights()
+                    right.update_heights()
+
+                    current = right
+                else:
+                    right_left = right.rotate(Direction.RIGHT)
+
+                    # height updation
+                    right.update_heights()
+                    right_left.update_heights()
+                    current.update_heights()
+
+                    current.rotate(Direction.LEFT)
+
+                    # height updation
+                    current.update_heights()
+                    right_left.update_heights()
+
+                    current = right_left
+
+            if current.parent is None:
+                root = current
+
+            current = current.parent
+
+        return cast(Self, root)
+
+    def insert(self: Self, other: Self) -> Self:
+        super().insert(other)
+
+        return other.fix()
+
+    @classmethod
+    def create_instance(cls, value: int) -> Self:
+        return cls(value)
+
+    def insert_value(self: Self, value: int) -> Self:
+        return self.insert(self.create_instance(value))
 
 
 class Color(IntEnum):
@@ -150,3 +281,100 @@ class RedBlackNode(Node):
     def __init__(self: RedBlackNode, value: int):
         super().__init__(value)
         self.color = Color.BLACK
+
+    def str_value(self: Self) -> str:
+        return f"{'R' if self.color == Color.RED else 'B'}{self.value}"
+
+    def fix(self: Self) -> Self:
+        current = self
+
+        parent = current.parent
+
+        while parent is not None and parent.color != Color.BLACK:
+            current.update_heights()
+
+            diff = current.height_diff()
+
+            if diff > 1:  # left heavy
+                left = cast(Self, current.left())
+
+                if left.left_height >= left.right_height:
+                    current.rotate(Direction.RIGHT)
+
+                    # height updation
+                    current.update_heights()
+                    left.update_heights()
+
+                    current = left
+                else:
+                    left_right = left.rotate(Direction.LEFT)
+
+                    # height updation
+                    left.update_heights()
+                    left_right.update_heights()
+                    current.update_heights()
+
+                    current.rotate(Direction.RIGHT)
+
+                    # height updation
+                    current.update_heights()
+                    left_right.update_heights()
+
+                    current = left_right
+
+            if diff < -1:  # right heavy
+                right = cast(Self, current.right())
+
+                if right.right_height >= right.left_height:
+                    current.rotate(Direction.LEFT)
+
+                    # height updation
+                    current.update_heights()
+                    right.update_heights()
+
+                    current = right
+                else:
+                    right_left = right.rotate(Direction.RIGHT)
+
+                    # height updation
+                    right.update_heights()
+                    right_left.update_heights()
+                    current.update_heights()
+
+                    current.rotate(Direction.LEFT)
+
+                    # height updation
+                    current.update_heights()
+                    right_left.update_heights()
+
+                    current = right_left
+
+            if current.parent is None:
+                root = current
+
+            current = current.parent
+
+        return cast(Self, root)
+
+    def insert(self: Self, other: Self) -> Self:
+        super().insert(other)
+
+        return other.fix()
+
+    @classmethod
+    def create_instance(cls, value: int) -> Self:
+        return cls(value)
+
+    def insert_value(self: Self, value: int) -> Self:
+        return self.insert(self.create_instance(value))
+
+
+def example():
+    root = AVLNode(10)
+    root = root.insert_value(20)
+    root = root.insert_value(30)
+    print(root.draw())
+    root = root.insert_value(40)
+    root = root.insert_value(5)
+    root = root.insert_value(-10)
+    return root
