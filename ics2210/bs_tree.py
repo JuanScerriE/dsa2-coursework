@@ -2,22 +2,21 @@ from __future__ import annotations
 
 from enum import IntEnum
 from collections import deque
-from typing import cast, Self, Any, Deque
+from random import randint
+from typing import cast, Self, Any, Deque, Literal
 
 
 def get_addr(object: Any) -> str:
     return "None" if object is None else str(id(object))
 
 
-class Branch(IntEnum):
-    LEFT = 0
-    ROOT = 1
-    RIGHT = 2
-
-
 class Direction(IntEnum):
     LEFT = 0
     RIGHT = 1
+
+    @staticmethod
+    def from_int(value: int) -> Direction:
+        return Direction.LEFT if value <= 0 else Direction.RIGHT
 
 
 class Node(object):
@@ -50,7 +49,7 @@ class Node(object):
         return self.left() is None and self.right() is None
 
     def value_dir(self: Self, other: Self) -> Direction:
-        return Direction.LEFT if self.value >= other.value else Direction.RIGHT
+        return Direction.LEFT if self.value > other.value else Direction.RIGHT
 
     def dir(self: Self, other: Self) -> Direction:
         return Direction.LEFT if self.left() is other else Direction.RIGHT
@@ -145,21 +144,53 @@ class Node(object):
             if (right := node.child[Direction.RIGHT]) is not None:
                 queue.append((level + 1, indent + step, height - 1, right))
 
+        if cell_width % 2 == 0:
+            cell_width += 1
+
+        cell_width += 2
+
+        decoration = list(" " * cell_width)
+
+        decoration[cell_width // 2] = "^"
+
+        decoration = "".join(decoration)
+
         prev_indent, prev_level = 0, 0
 
-        str_tree: str = ""
+        pretty_repeat = deque()
 
         while final_queue:
             (level, indent, node) = final_queue.popleft()
 
             if level > prev_level:
-                str_tree, prev_level, prev_indent = str_tree + "\n", level, 0
+                # do some pretty printing
 
-            str_tree += f"{(' ' * cell_width) * (indent - prev_indent)}{node.str_value():0>{cell_width}}"
+                print("\n", end="")
+
+                prev_indent = 0
+
+                while pretty_repeat:
+                    pretty_indent = pretty_repeat.popleft()
+
+                    print(
+                        f"{(' ' * cell_width) * (pretty_indent - prev_indent)}{decoration}",
+                        end="",
+                    )
+
+                    prev_indent = pretty_indent + 1
+
+                print("\n", end="")
+
+                prev_level, prev_indent = level, 0
+
+            pretty_repeat.append(indent)
+
+            print(
+                f"{(' ' * cell_width) * (indent - prev_indent)}[{node.str_value(): <{cell_width - 2}}]",
+                end="",
+            )
 
             prev_indent = indent + 1
-
-        return str_tree
 
 
 class AVLNode(Node):
@@ -170,9 +201,6 @@ class AVLNode(Node):
         super().__init__(value)
         self.left_height = 0
         self.right_height = 0
-
-    def str_value(self: Self) -> str:
-        return f"{self.left_height}|{self.value}|{self.right_height}"
 
     def height_diff(self: Self) -> int:
         return self.left_height - self.right_height
@@ -270,6 +298,21 @@ class AVLNode(Node):
         return self.insert(self.create_instance(value))
 
 
+def exampleAVL():
+    root = AVLNode(10)
+    root = root.insert_value(20)
+    root = root.insert_value(30)
+    root.draw()
+    root = root.insert_value(40)
+    root = root.insert_value(5)
+    root = root.insert_value(-10)
+    return root
+
+
+def is_black(node: RedBlackNode | None) -> bool:
+    return (node is None) or (node.color == Color.BLACK)
+
+
 class Color(IntEnum):
     RED = 0
     BLACK = 1
@@ -285,81 +328,73 @@ class RedBlackNode(Node):
     def str_value(self: Self) -> str:
         return f"{'R' if self.color == Color.RED else 'B'}{self.value}"
 
+    def sibling_is_red(self: Self) -> bool:
+        parent = cast(Self, self.parent)  # assuming the parent exists
+
+        return not is_black(parent.child[1 - parent.dir(self)])
+
+    def get_sibling(self: Self) -> Self | None:
+        parent = cast(Self, self.parent)  # assuming the parent exists
+
+        return parent.child[1 - parent.dir(self)]
+
     def fix(self: Self) -> Self:
         current = self
 
         parent = current.parent
 
-        while parent is not None and parent.color != Color.BLACK:
-            current.update_heights()
+        while not is_black(parent):
+            parent = cast(
+                Self, parent
+            )  # parent is definitely not None due to check in is_black
 
-            diff = current.height_diff()
+            grandparent = cast(
+                Self, parent.parent
+            )  # grandparent exists since parent is red
 
-            if diff > 1:  # left heavy
-                left = cast(Self, current.left())
+            if parent.sibling_is_red():
+                sibling = cast(
+                    Self, parent.get_sibling()
+                )  # sibling exists since it is red i.e. it is not None
 
-                if left.left_height >= left.right_height:
-                    current.rotate(Direction.RIGHT)
+                # invert the color
+                sibling.color = Color.BLACK
+                parent.color = Color.BLACK
 
-                    # height updation
-                    current.update_heights()
-                    left.update_heights()
+                if grandparent.parent is not None:
+                    grandparent.color = Color.RED
+            else:
+                direction = parent.dir(current)
+                parent_direction = grandparent.dir(parent)
 
-                    current = left
+                if parent_direction == direction:
+                    grandparent.rotate(Direction.from_int(1 - parent_direction))
+
+                    grandparent.color = Color.RED
+                    parent.color = Color.BLACK
+
+                    return parent
                 else:
-                    left_right = left.rotate(Direction.LEFT)
+                    parent.rotate(Direction.from_int(1 - direction))
+                    grandparent.rotate(Direction.from_int(1 - parent_direction))
 
-                    # height updation
-                    left.update_heights()
-                    left_right.update_heights()
-                    current.update_heights()
+                    current.color = Color.BLACK
+                    grandparent.color = Color.RED
 
-                    current.rotate(Direction.RIGHT)
+                    return current
 
-                    # height updation
-                    current.update_heights()
-                    left_right.update_heights()
+            current, parent = grandparent, grandparent.parent
 
-                    current = left_right
-
-            if diff < -1:  # right heavy
-                right = cast(Self, current.right())
-
-                if right.right_height >= right.left_height:
-                    current.rotate(Direction.LEFT)
-
-                    # height updation
-                    current.update_heights()
-                    right.update_heights()
-
-                    current = right
-                else:
-                    right_left = right.rotate(Direction.RIGHT)
-
-                    # height updation
-                    right.update_heights()
-                    right_left.update_heights()
-                    current.update_heights()
-
-                    current.rotate(Direction.LEFT)
-
-                    # height updation
-                    current.update_heights()
-                    right_left.update_heights()
-
-                    current = right_left
-
-            if current.parent is None:
-                root = current
-
-            current = current.parent
-
-        return cast(Self, root)
+        return current
 
     def insert(self: Self, other: Self) -> Self:
+        other.color = Color.RED  # always insert as RED
+
         super().insert(other)
 
-        return other.fix()
+        node = other.fix()
+
+        return node if (node.parent is None) else self
 
     @classmethod
     def create_instance(cls, value: int) -> Self:
@@ -369,12 +404,207 @@ class RedBlackNode(Node):
         return self.insert(self.create_instance(value))
 
 
-def example():
-    root = AVLNode(10)
+def exampleRedBlack():
+    root = RedBlackNode(10)
     root = root.insert_value(20)
     root = root.insert_value(30)
-    print(root.draw())
+    root.draw()
     root = root.insert_value(40)
     root = root.insert_value(5)
     root = root.insert_value(-10)
     return root
+
+
+class Integer:
+    value: int | Literal["-inf", "inf"]
+
+    def __init__(self: Self, value: int | Literal["-inf", "inf"]):
+        self.value = value
+
+    def __eq__(self: Self, other: Self) -> bool:
+        return self.value == other.value
+
+    def __lt__(self: Self, other: Self) -> bool:
+        if type(self.value) == int and type(other.value) == int:
+            return self.value < other.value
+
+        if self.value == "-inf" and other.value != "-inf":
+            return True
+
+        if other.value == "inf" and other.value != "inf":
+            return True
+
+        return False
+
+    def __le__(self: Self, other: Self) -> bool:
+        return self < other or self == other
+
+    def __gt__(self: Self, other: Self) -> bool:
+        return other < self
+
+    def __ge__(self: Self, other: Self) -> bool:
+        return other < self or other == self
+
+    def __repr__(self: Self) -> str:
+        return f"{self.value}"
+
+
+class SkipNode:
+    value: Integer
+    forward: list[Self | None]
+
+    def __init__(self: Self, value: Integer):
+        self.value = value
+        self.forward = [None]
+
+    @classmethod
+    def head(cls) -> Self:
+        return cls(Integer("-inf"))
+
+    @classmethod
+    def tail(cls) -> Self:
+        return cls(Integer("inf"))
+
+    def add(self: Self, other: Self, level: int):
+        forward = self.forward[level]
+
+        self.forward[level] = other
+
+        if level < len(other.forward):
+            other.forward[level] = forward
+        else:
+            other.forward.append(forward)
+
+    def add_level(self: Self):
+        self.forward.append(None)
+
+    def __repr__(self: Self) -> str:
+        return str(self.value)
+
+
+class SkipList:
+    head: SkipNode
+    tail: SkipNode
+    height: int
+    length: int
+
+    def __init__(self: Self):
+        self.head = SkipNode.head()
+        self.tail = SkipNode.tail()
+        self.height = 0
+        self.length = 2
+        self.head.forward[self.height] = self.tail
+
+    def find(self: Self, value: int) -> tuple[SkipNode, bool]:
+        integer = Integer(value)
+
+        current_height = self.height
+
+        current = self.head
+
+        while current_height > 0:
+            while integer >= cast(SkipNode, current.forward[current_height]).value:
+                current = cast(SkipNode, current.forward[current_height])
+
+            current_height -= 1
+
+        while integer >= cast(SkipNode, current.forward[current_height]).value:
+            current = cast(SkipNode, current.forward[current_height])
+
+        return current, current.value == integer
+
+    def add_level(self: Self):
+        self.height += 1
+
+        self.head.add_level()
+        self.tail.add_level()
+
+        self.head.forward[self.height] = self.tail
+
+    def insert(self: Self, value: int):
+        self.length += 1
+
+        integer = Integer(value)
+
+        current_height = self.height
+
+        current = self.head
+
+        stack = []
+
+        while current_height > 0:
+            while integer >= cast(SkipNode, current.forward[current_height]).value:
+                current = cast(SkipNode, current.forward[current_height])
+
+            stack.append(current)
+
+            current_height -= 1
+
+        while integer >= cast(SkipNode, current.forward[current_height]).value:
+            current = cast(SkipNode, current.forward[current_height])
+
+        new_element = SkipNode(integer)
+
+        current.add(new_element, current_height)
+
+        while randint(0, 1) == 0:  # add level
+            current_height += 1
+
+            if stack:  # i.e. it is not empty
+                current = stack.pop()
+
+                current.add(new_element, current_height)
+            else:
+                self.add_level()
+
+                self.head.add(new_element, current_height)
+
+    def draw(self: Self):
+        cell_width = 0
+
+        current = cast(SkipNode, self.head)
+
+        offsets: dict[SkipNode, int] = {}
+
+        for i in range(self.length):
+            cell_width = max(len(str(current.value)), cell_width)
+
+            offsets[current] = i
+
+            current = cast(SkipNode, current.forward[0])
+
+        level_cell_width = len(str(self.height))
+
+        print("Length:", self.length)
+
+        for level in range(self.height, -1, -1):
+            current = self.head
+
+            print(f"Level {level: >{level_cell_width}}: ", end="")
+
+            prev_offset = 0
+
+            while current is not None:
+                offset = offsets[current]
+
+                print(
+                    f"{(' ' * (cell_width + 1)) * (offset - prev_offset)}{str(current.value): >{cell_width}},",
+                    end="",
+                )
+
+                prev_offset = offset + 1
+
+                current = current.forward[level]
+
+            print()
+
+
+def exampleSkipList():
+    skiplist = SkipList()
+    skiplist.insert(20)
+    skiplist.insert(30)
+    skiplist.draw()
+    skiplist.insert(40)
+    skiplist.insert(5)
+    skiplist.insert(-10)
+    return skiplist
