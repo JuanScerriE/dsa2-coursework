@@ -1,28 +1,30 @@
-# ICT1018 Assignment
+# ICS2210 Assignment
 
 This repository contains the source code for all the tasks which
-had to be completed for the ICT1018 assignment. ICT1018 is a
-compulsory unit at the University of Malta which has to be
-taken by first year Computer Science and Mathematics undergraduates
+had to be completed for the ICS2210 assignment. ICS2210 is a
+compulsory unit at the University of Malta which has to be taken
+by third year Computer Science and Mathematics undergraduates
 during the second semester.
 
 ## Running Instructions
 
-The minimum required version for `python` is `3.10.4`.
+The minimum required version for `python` is `3.11.8`.
 
-The `answers` directory contains the implementation of the
-algorithms. The parent directory contains the test files.
+The `ics2210` directory contains the implementation of the data
+structures. The parent directory contains the test files.
 
-There is a test file for every question. Every test files makes
-use of the required algorithms from the `answers` directory.
+There is a procedure script, `procedure.py`. The script tests
+the data structures, implemented in the `ics2210` directory, as
+specified in the Course Project Sheet.
 
-To run the tests make sure you are using a terminal. Also make
-sure that your current directory is the project directory.
+To run the procedure script make sure you are using a terminal.
+Also make sure that your current directory is the project
+directory.
 
-Then for example run the test script for question 1.
+Then run the procedure script as follows:
 
 ```
-python test_q1.py
+python procedure.py
 ```
 
 **Note:** The Python 3 executable might be under a different
