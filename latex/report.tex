@@ -1,596 +1,67 @@
-\documentclass[12pt]{article}
+\documentclass[article]{uom-coursework}
 
-% PACKAGES
+\counterwithout{section}{chapter}
 
-\usepackage[
-top=2.50cm,
-bottom=2.50cm,
-left=2cm,
-right=2cm,
-marginparsep=0pt,
-marginparwidth=0pt]{geometry}
-\usepackage{fancyhdr}
-\usepackage{float}
-\usepackage{cancel}
-\usepackage{mathtools}
-\usepackage{amsmath}
-\usepackage{amsthm}
-\usepackage{amssymb}
-\usepackage{textcomp}
-\usepackage{ulem}
-\usepackage{contour}
-\usepackage{graphicx}
-\usepackage{svg}
-\usepackage{xcolor}
-\usepackage[T1]{fontenc}
-\usepackage{inputenc}
-\usepackage[utf8]{inputenx}
-\usepackage[unicode]{hyperref}
-\usepackage[shortlabels]{enumitem}
-\usepackage{booktabs}
-\usepackage{bookmark}
-\usepackage{listings}
-\usepackage{xcolor}
-\usepackage{tocloft}
-\usepackage{tikz}
-\usepackage[backend=biber]{biblatex}
-
-% MACROS & DEFS
-
-\newcommand{\floor}[1]{\left\lfloor #1 \right\rfloor}
-\newcommand{\ceil}[1]{\left\lceil #1 \right\rceil}
-\newcommand{\round}[1]{\left\lfloor #1 \right\rceil}
-\newcommand{\abs}[1]{\left\lvert #1 \right\rvert}
-
-\DeclareRobustCommand{\ul}[1]{%
-	\uline{\phantom{#1}}%
-	\llap{\contour{white}{#1}}%
-}
-
-\renewcommand{\ULdepth}{1.8pt}
-\contourlength{0.8pt}
-
-\setlength{\parindent}{0em}
-\setlength{\parskip}{0.75em}
-
-\definecolor{codegreen}{RGB}{0,135,0}
-\definecolor{codegray}{RGB}{135,135,135}
-\definecolor{codemagenta}{RGB}{215,0,135}
-\definecolor{codepurple}{RGB}{135,0,175}
-\definecolor{backcolour}{RGB}{238,238,238}
-
-% PACKAGE CONFIG
-
-\graphicspath{ {./images/} }
+\usepackage{blindtext}
 
 % Biblography
-\addbibresource{dsa.bib}
+% \addbibresource{dsa.bib}
 
-\lstdefinestyle{code}{
-	basicstyle=\ttfamily\small,
-	commentstyle=\color{codegray}\itshape,
-	keywordstyle=\color{codepurple},
-	stringstyle=\color{codegreen},
-	aboveskip=15pt,
-	captionpos=b,
-	abovecaptionskip=12.5pt,
-	breaklines=true,
-	numbers=none,
-	frame=tb,
-	framesep=5pt,
-	keepspaces=true,
-	showspaces=false,
-	showstringspaces=false,
-	breakatwhitespace=false,
-	tabsize=2,
-	showtabs=false,
-}
+\title{Data Structures and\\Algorithms 2}
+\tagline{Coursework}
+\author{Juan Scerri}
+\authorid{1234567A}
+\courseworkname{Some Degree}
+\doctype{coursework}
+\courseworkdate{\monthyeardate\today}
+\subjectcode{ICS2210}
 
-\lstset{style=code}
-
-% Set dots for table of contents
-\renewcommand{\cftdot}{.}
-\renewcommand{\cftsecleader}{\cftdotfill{\cftdotsep}}
-
-% Set theorem
-\newtheorem*{definition}{Definition}
-
-% HEADER & FOOTER
-
-\setlength{\headheight}{15pt}
-\pagestyle{fancy}
-\renewcommand{\headrulewidth}{0pt}
-\lhead{J. Scerri}
-\chead{ICT1018 --- Coursework}
-\rhead{\thepage}
-
-% TITLE
-
-\title{ICT1018 --- Data Structures \& Algorithms 1\\
-\vspace{1em}\textbf{Coursework}}
-
-\date{\today}
-
-\author {{\textbf{Juan Scerri}}\\
-B.Sc. (Hons)(Melit.) Computing Science and Mathematics (First Year)}
 
 \begin{document}
 
 %----------------------------------
-%	TITLE PAGE
+%	Front Matter
 %----------------------------------
+
+\pagestyle{umpage}
+
+\frontmatter
 
 \maketitle % Print the title page
 
-\thispagestyle{empty} % Suppress headers and footers on the title page
-
-%----------------------------------
-
-\tableofcontents
+\tableofcontents % Print the table of contents
 
 \clearpage
 
 \lstlistoflistings
 
+\mainmatter
+
 \clearpage
 
-\section{Plagiarism Declaration}
 
-Plagiarism is defined as \textit{``the unacknowledged use, as
-one's own, of work of another person, whether or not such work
-has been published, and as may be further elaborated in Faculty
-or University guidelines''} (\ul{University Assessment
-Regulations}, 2009, Regulation 39 (b)(i), University of Malta).
-
-I, the undersigned, declare that the report submitted is my
-work, except where acknowledged and referenced. I understand
-that the penalties for committing a breach of the regulations
-include loss of marks; cancellation of examination results;
-enforced suspension of studies; or expulsion from the degree
-programme.
-
-Work submitted without this signed declaration will not be
-corrected, and will be given zero marks.
-
-\vfill
-
-\begin{minipage}[t]{0.3\textwidth}
-\ul{Juan Scerri} \medskip
-
-\textbf{Student's full name} \medskip
-\end{minipage}
-\hfill
-\begin{minipage}[t]{0.3\textwidth}
-\ul{ICT1018} \medskip
-
-\textbf{Study-unit code} \medskip
-\end{minipage}
-\hfill
-\begin{minipage}[t]{0.3\textwidth}
-\ul{{\today}} \medskip
-
-\textbf{Date of submission} \medskip
-\end{minipage}
-
-\vspace{2cm}
-
-\textbf{Title of submitted work:} \ul{Data Structures \&
-Algorithms 1 Coursework}
-
-\vspace{2cm}
-
-\textbf{Student's signature} \medskip
-
-\underline{\includegraphics[height=2cm]{sig}} \medskip
-
-\section{Statement of Completion}
-
-% The statement of completion is a list of all the questions where
-% attempted, which work and which have bugs.
-
-I, the undersigned, declare that all twelve questions have been
-attempted. %(see list below).
-
-\begin{itemize}
-  \item \textit{Question 1} -- Attempted and works well.
-  \item \textit{Question 2} -- Attempted and works well.
-  \item \textit{Question 3} -- Attempted and works well.
-  \item \textit{Question 4} -- Attempted and works well.
-  \item \textit{Question 5} -- Attempted and works well.
-  \item \textit{Question 6} -- Attempted and works well.
-  \item \textit{Question 7} -- Attempted and works well.
-  \item \textit{Question 8} -- Attempted and works well.
-  \item \textit{Question 9} -- Attempted and works well.
-  \item \textit{Question 10} -- Attempted and works well.
-  \item \textit{Question 11} -- Attempted and works well.
-  \item \textit{Question 12} -- Attempted and works well.
-\end{itemize}
-
-\vfill
-
-\textbf{Student's Signature} \medskip
-
-\underline{\includegraphics[height=2cm]{sig}} \medskip
-
-Juan Scerri
-
-\section{Language, Comments \& Testing Methodology}
-
-\subsection{Language}
-
-The programming language which I chose to do this assignment is
-Python 3. The main reason for chosing Python 3 is its speed of
-development.
-
-\subsection{Comments}
-
-Throughout the assignment I wrote a lot of explanation directly in
-the comments of the code. In Python comments start with a
-\texttt{\#}. Moreover, in the listings comments have a grey
-color.
-
-\subsection{Testings Methodology}
-
-Each algorithm was tested using a separarte file. In general the
-file is \texttt{test\_q\{n\}.py}, where \texttt{n} refers to the
-question number. Moreover, each file contains a minimal
-description of how each test is carried out.
-
-Each test script compares the results of the implemented
-algorithms with the expected results given a particular input.
-If the results match ``\texttt{Test Passed}'' is printed
-otherwise ``\texttt{Test Failed}'' is printed. 
-
-Moreover, usage for each question is also implemented in the
-respective test script. The usage is demonstrated in a screen
-dump.
-
-For example \textit{Question 1} requires the sorting of two
-arrays which have at least 256 elements and are of different
-length. The contents of each array is printed to ensure that
-they are being sorted (this can be seen in the respective screen
-dump).
-
-\textit{Note:} Each screen dump is an instance of a test script
-running. It is \textbf{recommended} that each test script is
-rerun to ensure that it is functional and isomorphic to the
-equivalent screen dump in the report.
-
-\section{\textit{Question 1:} Shellsort \& Quicksort}
-
-The gap sequence used in the Shellsort algorithm was proposed by
-\textcite{frank60}, and the partition scheme used in the
-Quicksort algorithm was proposed by \textcite{hoare62}.
-
-\lstinputlisting[caption={Answer to \textit{Question
-1}},language=Python]{answers/q1.py}
-
-\lstinputlisting[caption={Test for \textit{Question 1}
-},language=Python]{test_q1.py}
-
-\lstinputlisting[caption={Screen dump for \textit{Question
-1}}]{dumps/dump_q1.txt}
-
-\section{\textit{Question 2:} Merging Sorted Arrays}
-
-\lstinputlisting[caption={Answer to \textit{Question
-2}},language=Python]{answers/q2.py}
-
-\lstinputlisting[caption={Test for \textit{Question 2}
-},language=Python]{test_q2.py}
-
-\lstinputlisting[caption={Screen dump for \textit{Question
-2}}]{dumps/dump_q2.txt}
-
-\section{\textit{Question 3:} Finding Extremes}
-
-To show that an array is sorted if does not have extremes, we
-need to define what it means for an array to be sorted and what
-it means for an array to have extremes.
-
-\begin{definition}
-  A zero indexed array of size $n$, $A$, is said to be
-  \textbf{sorted} if
-  \begin{align*}
-    \forall \, i \in \{1,2,3,\ldots,n-1\} :
-    A[i-1] \leq A[i] \leq A[i+1] \\
-    \vee \,
-    A[i-1] \geq A[i] \geq A[i+1]
-  \end{align*}
-\end{definition}
-
-\begin{definition}
-  A zero indexed array of size $n$, $A$, is said to have
-  \textbf{extremes} if
-  \begin{align*}
-    \exists \, i \in \{1,2,3,\ldots,n-1\} :
-    (A[i-1] > A[i] \, \wedge \, A[i+1] > A[i]) \\ 
-    \vee \,
-    (A[i-1] < A[i] \, \wedge \, A[i+1] < A[i])
-  \end{align*}
-\end{definition}
-
-Now we simply show that these two statements are the negation of
-each other. We arbitrarily decide to negate the first (i.e. the
-definition of \textbf{sorted}).
-
-\begin{align*}
-  \neg \, \forall \, i \in \{1,2,3,\ldots,n-1\} :
-  A[i-1] \leq A[i] \leq A[i+1] \\
-  \vee \,
-  A[i-1] \geq A[i] \geq A[i+1] \\\\
-  \Longleftrightarrow \, \exists \, i \in \{1,2,3,\ldots,n-1\} :
-  (A[i-1] > A[i] \, \vee \, A[i] > A[i+1]) \\
-  \wedge \,
-  (A[i-1] < A[i] \, \vee \, A[i] < A[i+1]) \\\\
-  \Longleftrightarrow \, \exists \, i \in \{1,2,3,\ldots,n-1\} :
-  (A[i-1] > A[i] \, \wedge \, A[i-1] < A[i]) \\
-  \vee \,
-  (A[i-1] > A[i] \, \wedge \, A[i] < A[i+1]) \\
-  \vee \,
-  (A[i] > A[i + 1] \, \wedge \, A[i-1] < A[i]) \\
-  \vee \,
-  (A[i] > A[i + 1] \, \wedge \, A[i] < A[i+1]) \\\\
-  \Longleftrightarrow \, \exists \, i \in \{1,2,3,\ldots,n-1\} :
-  \text{False} \\
-  \vee \,
-  (A[i-1] > A[i] \, \wedge \, A[i] < A[i+1]) \\
-  \vee \,
-  (A[i-1] < A[i] \, \wedge \, A[i] > A[i + 1]) \\
-  \vee \,
-  \text{False} \\\\
-  \Longleftrightarrow \, \exists \, i \in \{1,2,3,\ldots,n-1\} :
-  (A[i-1] > A[i] \, \wedge \, A[i] < A[i+1]) \\
-  \vee \,
-  (A[i-1] < A[i] \, \wedge \, A[i] > A[i + 1])
-\end{align*}
-
-Therefore, an array has \textbf{extremes} if and only if it is
-\ul{not} \textbf{sorted}. Hence, if an array does \ul{not} have
-\textbf{extremes}, then it must be \textbf{sorted}.
-
-\lstinputlisting[caption={Answer to \textit{Question
-3}},language=Python]{answers/q3.py}
-
-\lstinputlisting[caption={Test for \textit{Question 3}
-},language=Python]{test_q3.py}
-
-\lstinputlisting[caption={Screen dump for \textit{Question
-3}}]{dumps/dump_q3.txt}
-
-\section{\textit{Question 4:} Finding Product Relations}
-
-For an explanation read the comments.
-
-\lstinputlisting[caption={Answer to \textit{Question
-4}},language=Python]{answers/q4.py}
-
-\lstinputlisting[caption={Test for \textit{Question 4}
-},language=Python]{test_q4.py}
-
-\lstinputlisting[caption={Screen dump for \textit{Question
-4}}]{dumps/dump_q4.txt}
-
-\section{\textit{Question 5:} \texttt{RPN} Calculator}
-
-For an explanation read the comments below.
-
-\lstinputlisting[caption={Answer to \textit{Question
-5}},language=Python]{answers/q5.py}
-
-\lstinputlisting[caption={Test for \textit{Question 5}
-},language=Python]{test_q5.py}
-
-\lstinputlisting[caption={Screen dump for \textit{Question
-5}}]{dumps/dump_q5.txt}
-
-\section{\textit{Question 6:} Finding Primes}
-
-The algorithm used for the sieve was inspired by
-\textcite{sorenson90}. For the optimisations, refer to the
-comments in the code.
-
-\lstinputlisting[caption={Answer to \textit{Question
-6}},language=Python]{answers/q6.py}
-
-\lstinputlisting[caption={Test for \textit{Question 6}
-},language=Python]{test_q6.py}
-
-\lstinputlisting[caption={Screen dump for \textit{Question
-6}}]{dumps/dump_q6.txt}
-
-\section{\textit{Question 7:} Building a Binary Search Tree}
-
-For an explanation read the comments below.
-
-\lstinputlisting[caption={Answer to \textit{Question
-7}},language=Python]{answers/q7.py}
-
-\lstinputlisting[caption={Test for \textit{Question 7}
-},language=Python]{test_q7.py}
-
-\lstinputlisting[caption={Screen dump for \textit{Question
-7}}]{dumps/dump_q7.txt}
-
-\section{\textit{Question 8:} Square Root Approximation}
-
-For an explanation read the comments below.
-
-\lstinputlisting[caption={Answer to \textit{Question
-8}},language=Python]{answers/q8.py}
-
-The \texttt{halley\_sqrt()} function is an implementation of an
-alternative root-finding algorithm \cite{wolframhalley} which
-converges faster than Newton's method. However, the computation
-is much more expensive which might result in it being slower.
-
-\lstinputlisting[caption={Test for \textit{Question 8}
-},language=Python]{test_q8.py}
-
-\lstinputlisting[caption={Screen dump for \textit{Question
-8}}]{dumps/dump_q8.txt}
-
-\section{\textit{Question 9:} Finding Duplicates}
-
-For an explanation read the comments below.
-
-\lstinputlisting[caption={Answer to \textit{Question
-9}},language=Python]{answers/q9.py}
-
-\lstinputlisting[caption={Test for \textit{Question 9}
-},language=Python]{test_q9.py}
-
-\lstinputlisting[caption={Screen dump for \textit{Question
-9}}]{dumps/dump_q9.txt}
-
-\section{\textit{Question 10:} Recursive \texttt{max()}}
-
-For an explanation read the comments below.
-
-\lstinputlisting[caption={Answer to \textit{Question
-10}},language=Python]{answers/q10.py}
-
-\lstinputlisting[caption={Test for \textit{Question 10}
-},language=Python]{test_q10.py}
-
-\lstinputlisting[caption={Screen dump for \textit{Question
-10}}]{dumps/dump_q10.txt}
-
-\section{\textit{Question 11:} Cosine/Sine Approximation}
-
-For an explanation read the comments below.
-
-\lstinputlisting[caption={Answer to \textit{Question
-11}},language=Python]{answers/q11.py}
-
-\lstinputlisting[caption={Test for \textit{Question 11}
-},language=Python]{test_q11.py}
-
-\lstinputlisting[caption={Screen dump for \textit{Question
-11}}]{dumps/dump_q11.txt}
-
-\section{\textit{Question 12:} Fibonacci Sums}
-
-To find Fibonacci sums very quickly, the two results listed
-below \cite{wikifib} can be used.
-
-\begin{align}
-  F_n = \round{\frac{\phi^n}{\sqrt{5}}}, \quad \phi = \frac{1 +
-  \sqrt{5}}{2}. \label{fib_num}
-\end{align}
-
-\begin{align}
-  \sum_{i=1}^{n} F_i = F_{n+2} - 1. \label{fib_sum}
-\end{align}
-
-The original equation for the Fibonacci numbers is a recurrence
-relation defined as
-
-\begin{align}
-  F_n = F_{n-1} + F_{n-2}, \qquad F_1 = F_2 = 1. \label{fib_def}
-\end{align}
-
-However, there exists a closed-form expression called Binet's
-Formula \cite{wolframfib} which is the following
-
-\begin{align*}
-  F_n = \frac{\phi^n - (-\phi)^n}{\sqrt{5}}.
-\end{align*}
-
-One notices that,
-
-\begin{align*}
-  \forall \, n \in \mathbb{N} : \abs{\frac{(-\phi)^n}{\sqrt{5}}}
-  < \frac{1}{2},
-\end{align*}
-
-which implies
-
-\begin{align*}
-  \forall \, n \in \mathbb{N} : \abs{F_n -
-  \frac{\phi^n}{\sqrt{5}}} < \frac{1}{2}.
-\end{align*}
-
-Visually, this can be represented as follows.
-
-\begin{center}
-  \begin{tikzpicture}
-    \draw [thick] (-4, 0) -- (4, 0);
-    \draw [thick] (0, -0.2) -- (0, 0.2);
-
-    % Brackets
-    \node at (-1.5, 0) {$($};
-    \node at (1.5, 0) {$)$};
-
-    % Bottom labels
-    \node [below] at (0, -0.25) {$F_n$};
-    \node [below] at (-1.5, -0.25) {$F_n - \frac{1}{2}$};
-    \node [below] at (1.5, -0.25) {$F_n + \frac{1}{2}$};
-
-    % Indicator of our value
-    \draw [thick, ->] (-1, 0.5) -- (-1, 0);
-
-    % Our value
-    \node [above] at (-1, 0.5) {$\frac{\phi^n}{\sqrt{5}}$};
-  \end{tikzpicture}
-\end{center}
-
-This allows to conclude that $\frac{\phi^n}{\sqrt{5}}$ is always
-within rounding error of the actual Fibonacci number. Hence, by
-rounding $\frac{\phi^n}{\sqrt{5}}$ we get the $n$-th Fibonacci
-number.
-
-This completes our derivation for \ref{fib_num}.
-
-\vspace{1em}
-
-We can prove \ref{fib_sum} by using an inductive argument.
-
-\vspace{1em}
-
-\textit{Argument.}
-
-Base case ($n = 1$): 
-
-$$LHS = \sum_{i = 1}^{1} F_i = F_1 = 1$$ 
-$$RHS = F_{1 + 2} - 1 = F_3 - 1 = F_2 + F_1 - 1 = 1 + 1 - 1 =
-1$$
-
-Hence, the base case holds since $LHS = RHS$.
-
-\vspace{1em}
-
-Inductive case ($n = k$):
-
-Suppose that sum holds for $n = k - 1$. 
-
-\begin{align}
-  \sum_{i = 1}^{k - 1} F_i = F_{k - 1 + 2} - 1 = F_{k + 1} - 1
-  \label{ind_hyp}
-\end{align}
-
-We are required to show that the sum holds for $n = k$.
-
-\begin{align*}
-  \sum_{i = 1}^{k} F_i & = F_{k} + \sum_{i = 1}^{k - 1} F_i\\
-                       % & \qquad (By\ \ref{ind_hyp})\\
-                       & = F_{k + 1} + F_{k} - 1\\
-                       % & \qquad (By\ \ref{fib_def})\\
-                       & = F_{k + 2} - 1 
-\end{align*}
-
-Therefore, by induction, \ref{fib_sum} holds for all natural
-numbers.
-
-\lstinputlisting[caption={Answer to \textit{Question
-12}},language=Python]{answers/q12.py}
-
-\lstinputlisting[caption={Test for \textit{Question 12}
-},language=Python]{test_q12.py}
-
-\lstinputlisting[caption={Screen dump for \textit{Question
-12}}]{dumps/dump_q12.txt}
-
-\printbibliography
+% \chapter{Report}
+
+\chapter*{Report}
+\label{chap:report}
+\addcontentsline{toc}{chapter}{\nameref{chap:report}}
+
+\section{Section?}
+\section{Section?}
+\section{Section?}
+\section{Section?}
+\section{Section?}
+\section{Section?}
+\section{Section?}
+\section{Section?}
+\section{Section?}
+\section{Section?}
+\section{Section?}
+\section{Section?}
+
+
+\blindtext
+\blindtext
+\blindtext
 
 \end{document}
