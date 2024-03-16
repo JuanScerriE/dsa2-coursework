@@ -1,7 +1,0 @@
-Primality Tests
-Test Passed
-Test Passed
-Test Passed
-
-Sieve Test
-Test Passed

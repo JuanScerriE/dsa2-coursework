@@ -1,8 +1,9 @@
 \documentclass[article]{uom-coursework}
 
-\counterwithout{section}{chapter}
-
 \usepackage{blindtext}
+\usepackage[showframe]{geometry}
+
+\counterwithout{section}{chapter}
 
 % Biblography
 % \addbibresource{dsa.bib}
@@ -35,10 +36,9 @@
 
 \lstlistoflistings
 
-\mainmatter
-
 \clearpage
 
+\mainmatter
 
 % \chapter{Report}
 
@@ -46,10 +46,42 @@
 \label{chap:report}
 \addcontentsline{toc}{chapter}{\nameref{chap:report}}
 
-\section{Section?}
-\section{Section?}
-\section{Section?}
-\section{Section?}
+% TODO: the report
+% add reason for language
+% add comments for explanation
+% add lstlisting describing the knuth_shuffle
+% add lstlisting describing the untyped_tree
+% add lstlisting describing the untyped_avl_tree
+% add lstlisting describing the untyped_rb_tree
+% add lstlisting describing the skip_list
+% then explain the procedure.py and what is does
+% add a section describing the statistics
+
+\section{Language}
+
+The programming language used for this coursework is Python 3.
+The main reason for this choice is the speed of development.
+
+\section{Comments}
+
+Throughout the code an effort was made to deliver explanations
+through comments. In Python comments start with a \#. Moreover,
+in the listings comments have a grey colour.
+
+\section{Knuth Shuffling}
+
+\lstinputlisting[caption={A function implementing Knuth shuffling.},language=Python,firstline=8,lastline=13]{../ics2210/knuth_shuffling.py}
+
+Knuth shuffling, also known as Fisher--Yates shuffling, is an
+algorithm used for generating permutations of the elements of a
+given array.
+
+The implementation follows the pseudocode described here:
+\url{https://en.wikipedia.org/wiki/Fisher%E2%80%93Yates_shuffle#The_modern_algorithm}
+
+\section{Binary Search Tree}
+
+
 \section{Section?}
 \section{Section?}
 \section{Section?}
