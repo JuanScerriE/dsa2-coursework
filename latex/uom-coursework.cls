@@ -89,7 +89,7 @@
 \RequirePackage{listings} % For code listings
 \RequirePackage{booktabs} % For more professional looking tables
 \RequirePackage{tikz} % For creating painful but beautiful SVG graphics
-\RequirePackage{coffeestains} % No reading is truly ever starts without an accompanying cup of coffee (or ... tea)
+% \RequirePackage{coffeestains} % No reading is truly ever starts without an accompanying cup of coffee (or ... tea)
 \RequirePackage{tcolorbox} % If we don't have fancy boxes then what are we doing?
 \RequirePackage{fontspec} % This gives us more granular control over our fonts
 \RequirePackage{datetime} % For Current Month and Year (cover page)
@@ -338,7 +338,7 @@
 
 
 \setmainfont{lato} % Setup the main font as Lato
-\setmonofont{courier} % Setup the mono font as Lato
+\setmonofont{Iosevka} % Setup the mono font as Lato
 
 \setdefaultlanguage{english} % Set the default language of the document
 
