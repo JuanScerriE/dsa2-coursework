@@ -1,10 +1,9 @@
 #!/usr/bin/env python3
 
 from .untyped_tree import Direction, Node, Tree
-
 from statistics import mean, median, variance
-
 from random import randint, seed
+from math import sqrt
 
 
 class AVLNode(Node):
@@ -140,28 +139,28 @@ class AVLTree(Tree):
         min_steps = min(self.num_of_steps)
         max_steps = max(self.num_of_steps)
         mean_steps = mean(self.num_of_steps)
-        variance_steps = variance(self.num_of_steps)
+        deviation_steps = sqrt(variance(self.num_of_steps))
         median_steps = median(self.num_of_steps)
 
         print(
             f"""Min Steps: {min_steps}
 Max Steps: {max_steps}
 Mean Steps: {mean_steps}
-Variance Steps: {variance_steps}
+Standard Deviation Steps: {deviation_steps}
 Median Step: {median_steps}"""
         )
 
         min_rotations = min(self.num_of_rotations)
         max_rotations = max(self.num_of_rotations)
         mean_rotations = mean(self.num_of_rotations)
-        variance_rotations = variance(self.num_of_rotations)
+        deviation_rotations = sqrt(variance(self.num_of_rotations))
         median_rotations = median(self.num_of_rotations)
 
         print(
             f"""Min Rotations: {min_rotations}
 Max Rotations: {max_rotations}
 Mean Rotations: {mean_rotations}
-Variance Rotations: {variance_rotations}
+Standard Deviation Rotations: {deviation_rotations}
 Median Rotations: {median_rotations}"""
         )
 

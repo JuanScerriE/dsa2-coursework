@@ -3,6 +3,7 @@ from __future__ import annotations
 from typing import cast, Self, Literal
 from statistics import mean, median, variance
 from random import randint, seed
+from math import sqrt
 
 
 class Integer:
@@ -101,6 +102,26 @@ class SkipList:
 
         self.head.forward[self.height] = self.tail
 
+    def find(self: Self, value: int) -> SkipNode | None:
+        integer = Integer(value)
+
+        current_height = self.height
+
+        current = self.head
+
+        # reach the place for insertion
+        while current_height >= 0:
+            while integer >= cast(SkipNode, current.forward[current_height]).value:
+                current = cast(SkipNode, current.forward[current_height])
+
+            if (integer == cast(SkipNode, current).value):
+                return current
+
+            current_height -= 1
+
+        return None
+
+
     def insert(self: Self, value: int):
         self.length += 1
 
@@ -115,6 +136,7 @@ class SkipList:
         if self.enable_stats:
             steps = 0
 
+        # reach the place for insertion
         while current_height > 0:
             while integer >= cast(SkipNode, current.forward[current_height]).value:
                 current = cast(SkipNode, current.forward[current_height])
@@ -204,28 +226,28 @@ class SkipList:
         min_steps = min(self.num_of_steps)
         max_steps = max(self.num_of_steps)
         mean_steps = mean(self.num_of_steps)
-        variance_steps = variance(self.num_of_steps)
+        deviation_steps = sqrt(variance(self.num_of_steps))
         median_steps = median(self.num_of_steps)
 
         print(
             f"""Min Steps: {min_steps}
 Max Steps: {max_steps}
 Mean Steps: {mean_steps}
-Variance Steps: {variance_steps}
+Standard Deviation Steps: {deviation_steps}
 Median Step: {median_steps}"""
         )
 
         min_promotions = min(self.num_of_promotions)
         max_promotions = max(self.num_of_promotions)
         mean_promotions = mean(self.num_of_promotions)
-        variance_promotions = variance(self.num_of_promotions)
+        deviation_promotions = sqrt(variance(self.num_of_promotions))
         median_promotions = median(self.num_of_promotions)
 
         print(
             f"""Min Promotions: {min_promotions}
 Max Promotions: {max_promotions}
 Mean Promotions: {mean_promotions}
-Variance Promotions: {variance_promotions}
+Standard Deviation Promotions: {deviation_promotions}
 Median Promotions: {median_promotions}"""
         )
 
@@ -234,21 +256,7 @@ Median Promotions: {median_promotions}"""
         print(f"Levels: {levels}")
 
 
-def exampleSkipList():
-    skip_list = SkipList()
-
-    seed(10)
-
-    for _ in range(20):
-        skip_list.insert(randint(1, 50))
-
-    skip_list.draw()
-    skip_list.compute_stats()
-
-    return skip_list
-
-
-def exampleSkipListWithStats():
+def example():
     skip_list = SkipList(enable_stats=True)
 
     seed(10)

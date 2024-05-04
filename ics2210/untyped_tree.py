@@ -120,6 +120,29 @@ class Tree:
     def insert_value(self, value):
         raise NotImplementedError
 
+    def find(self, value):
+        current = self.root
+
+        found = None
+        
+        while (current != None):
+            if (current.value == value):
+                found = current
+
+                break
+            
+            if (value < current.value):
+                current = current.left()
+
+                continue
+
+            if (current.value < value):
+                current = current.right()
+
+                continue
+
+        return found
+
     def calc_height(self):
         def _calc_height(node) -> int:
             if node is None:

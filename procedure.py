@@ -13,6 +13,8 @@ permutation = [n for n in range(1, 5000 + 1, 1)]
 
 shuffle(permutation)
 
+print("--- Inserting the first 5000 integers! ---\n")
+
 avl_tree = AVLTree(enable_stats=True)
 
 for value in permutation:
@@ -45,6 +47,8 @@ skip_list.compute_stats()
 print()
 # skip_list.draw()
 # print()
+
+print("--- Inserting the other 1000 integers! ---\n")
 
 other_array = [randint(0, 100000) for _ in range(1000)]
 
