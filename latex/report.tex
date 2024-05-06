@@ -1,9 +1,9 @@
 \documentclass[article]{uom-coursework}
 
-\usepackage{blindtext}
-\usepackage[showframe]{geometry}
+% \usepackage{blindtext}
+% \usepackage[showframe]{geometry}
 \usepackage{float}
-\usepackage{listingsutf8}
+% \usepackage{listingsutf8}
 \usepackage[backend=biber]{biblatex}
 
 % \usepackage{syntax}
@@ -148,21 +148,20 @@ The only issue with these methods is that they are recursive.
 However, since the trees under consideration will be balanced
 and are limited to 6000 nodes, they are well within the
 recursion limit of the language. However, this is of course not
-ideal and iterative approaches should be preferred.
+ideal and iterative approaches should be considered.
 
-The \texttt{draw()} method as its name implies allows the trees
-to be drawn and printed to the terminal. This method was
+The \texttt{draw()} method, as its name implies, allows the
+trees to be drawn and printed to the terminal. This method was
 invaluable during development to ensure correctness of
 algorithms by checking for parity with other implementations,
 specifically those found at
 \url{https://www.cs.usfca.edu/~galles/visualization/}.
 
-If you wish to test the implementations for yourself please
-either use \texttt{python} or \texttt{ipython}. Additionally,
-please ensure that you are in the root directory of the project.
-Then follow the commands used in Figure \ref{fig:ipythonavl} and
-Figure \ref{fig:ipythonskip}.
-
+If you wish to test the implementations for yourself, please use
+\texttt{python} or \texttt{ipython}. Additionally, ensure that
+you are in the root directory of the project. Then follow the
+commands used in Figure \ref{fig:ipythonavl} and Figure
+\ref{fig:ipythonskip}.
 
 \begin{figure}[H]
 \centering
@@ -192,7 +191,7 @@ builtin example).}
 \end{figure}
 
 The \texttt{Node} class is a bit more complicated. It is not
-simply a pure node, it contains a variety of methods which help
+simply a pure node. It contains a variety of methods which help
 facilitate readable code within the encompassing data
 structures, specifically the \texttt{AVLTree} and
 \texttt{RBTree} classes.
@@ -202,40 +201,40 @@ The following methods are of particular interest:
 and \texttt{dir()}. The other present method are fairly simple
 and straight forward.
 
-The \texttt{can\_step()} method returns a boolean allowing
-indicating to the callee whether or not a node has a child in
-the specified direction.
+The \texttt{can\_step()} method returns a boolean indicating to
+the callee whether or not a node has a child in the specified
+direction.
 
 The \texttt{value\_dir()} accepts a value which can be compared
-with the value present in the node. Then depending on whether
-the value is greater than or less than the value in the node a
+with value present in the node. Then depending on whether the
+value is greater than or less than the value in the node, a
 direction is provided. In particular, if its is less than, the
 \texttt{LEFT} direction will returned and if it is greater than
 (or equal to) the \texttt{RIGHT} direction is returned.
 
-\texttt{dir()} is used to check whether an other node is on the
+\texttt{dir()} is used to check whether another node is on the
 left or right of the current node.
 
 \begin{note}
-This method is unsafe. In particular if an other node is
-provided and it is not a child of the self node then it will be
-classified as being on the right of the node which is of course
-incorrect.
+This method is \textbf{unsafe}. In particular if an other node
+is provided and it is not a child of the self node then it will
+be classified as being on the right of the node which is of
+course incorrect.
 \end{note}
 
 The \texttt{rotate()} method was inspired by the
 \texttt{RotateDirRoot()} function in \textcite{wikirbtree}. It
 is a simple method which generalises LL and RR rotations. The
-benefit of this is that LR and RL are then just composition of
-LL and RR rotations. Hence complexity with the code for AVL
-trees and Red-Black trees is reduced because there is no need
-for thought about the actual mechanism for rotation.
+benefit of this is that LR and RL are just composition of LL and
+RR rotations. Hence, complexity within the code for AVL trees
+and Red-Black trees is reduced because there is no need for
+thought about the actual mechanism for rotation.
 
 \section{AVL Trees}
 
-AVL trees where implemented by first inheriting from the base
+AVL trees were implemented by first inheriting from the base
 classes described above. The \texttt{left\_height} and
-\texttt{right\_height} fields where added as they are required
+\texttt{right\_height} fields were added as they are required
 for rebalancing. Additionally, the \texttt{height\_diff()}
 method allows for the calculation of the difference in height
 between the left and right sub-trees of \texttt{self} i.e. that
@@ -248,25 +247,25 @@ def insert(self, node):
     self.root = self.fix(super().insert(node))
 \end{lstlisting}
 
-The \texttt{fix()} method rebalances the tree after an insertion
-if required. It is mostly an intuitive implementation of the
-algorithms as they would be described on a piece of paper.
+The \texttt{fix()} method rebalances the tree after an
+insertion, if required. It is mostly an intuitive implementation
+of the algorithms as they would be described on a piece of
+paper.
 
-In particular, the method starts from inserted node and checks
-that each node in the path up to the root is balanced.  If not
-one of the rebalancing algorithms LL, LR, RR or RL is employed.
+In particular, the method starts from the inserted node, and
+checks that each node in the path up to the root is balanced. If
+not, one of the rebalancing algorithms LL, LR, RR or RL is
+employed.
 
 \begin{note}
-At the end the root is returned. This is critical
-because the root of the tree can change due to rotations.
+At the end, the root is returned. This is critical because the
+root of the tree can change due to rotations.
 \end{note}
 
 The code is additionally sprinkled with bits and pieces which
-keep track of the necessary statistics.
-
-In particular, use of the fact that if-statements in
-\texttt{python} do not create a scope of there own is being
-used.
+keep track of the necessary statistics. This is acheived by
+using the the fact that if-statements in \texttt{python} do no
+create a scoped of their own.
 
 \section{Red-Black Trees}
 
@@ -284,23 +283,23 @@ considered as a black node).
 The \texttt{RBTree} class similarly to the \texttt{AVLTree}
 class has a \texttt{fix()} method. The \texttt{fix()} method
 again starts at the inserted node and traverse up to the root,
-at each step checking constraint violations and fixing them
+at each step checking for colouring violations and fixing them
 if necessary. 
 
 \begin{note}
-The \texttt{fix()} for an Red-Black tree does not need to
-traverse up the whole tree to the root. If at any point a parent
-not which is black is reached, insertion is complete.
+The \texttt{fix()} for a Red-Black tree does not need to
+traverse up the whole tree to the root. If at any point, a
+non-black parent is reached, insertion is complete.
 \end{note}
 
-Again a similar approach to collecting statistics is used.
+Again, a similar approach to collecting statistics is used.
 
 \section{Skip Lists}
 
-Before implementing a skip list an extended integer class was
-defined. In particular the set of objects instantiated by the
-class is set of all integers and the objects `$-\infty$' and
-`$\infty$'. Of course the most natural property these objects,
+Before implementing a skip list, an extended integer class was
+defined. In particular, the set of objects instantiated by the
+class is the set of all integers and the objects `$-\infty$' and
+`$\infty$'. Of course,kkkjjj the most natural property these objects,
 which are called ``infinity'', have is the following:
 
 $$\forall z \in \mathbb{Z} \cup \{-\infty, \infty\}, -\infty \leq z \leq \infty$$
@@ -317,37 +316,36 @@ issues with not having a top-most left element.
 \end{figure}
 
 Figure \ref{fig:imageskiplist} was a great inspiration and
-helped guide the implementation of the skip list. Each element
-in a skip list is called an instance of the \texttt{SkipNode}
-class and each skip node is a value and a list or array (which
-ever one \texttt{python} uses under the hood) of pointers.
+helped to guide the implementation of the skip list. Each
+element in a skip list is an instance of the \texttt{SkipNode}
+class and each skip node is a value and a list or array
+(whichever one \texttt{python} uses under the hood) of pointers.
 
 The \texttt{SkipNode} class has two class methods which generate
 the head and tail nodes respectively. Along with an
 \texttt{add\_level()} method which increases the size of the
-associated list or array by one. Finally, the \texttt{add()}
-method allows the addition of a new skip node in between
-\texttt{self} and the next skip node at a specified level.
+associated list or array by one. The \texttt{add()} method
+allows the addition of a new skip node in between \texttt{self}
+and the next skip node at a specified level.
 
 Finally, the skip list itself keeps track of the head and tail
 of the list along, with the height and length. Additionally, if
-enabled the specified statistics will also be collected.
+enabled, the specified statistics will also be collected.
 
-The \texttt{insert()} method is the primary method for the
-\texttt{SkipList} class. In particular it traverses the skip
-list keeping track of all the nodes which contain the largest
-value less than or equal to the value being inserted. These
+The \texttt{insert()} method is the primary method in the
+\texttt{SkipList} class. In particular, it traverses the skip
+list, keeping track of all the nodes which contain the largest
+value less than, or equal to the value being inserted. These
 values are kept in a stack as the algorithm traverses down the
 list.
 
 Keeping track of these nodes is important for the second phase
 of the insertion algorithm. After inserting in the lowest level,
 a node can be promoted a random number of times. As the node is
-promoted it needs to be linked with the appropriate skip nodes
+promoted, it needs to be linked with the appropriate skip nodes
 at its current level. It is important that it is linked to the
-correct skip node to maintain the ordering of the skip list.
-This is facilitated by the stack used by the algorithm to
-maintain a list of such nodes.
+correct skip nodes to maintain the ordering of the skip list.
+This is facilitated by the stack described above.
 
 \section{The \texttt{procedure.py} File}
 
@@ -472,50 +470,49 @@ means an oddity. As mentioned in \textcite{wikirbtree}, the
 bullet point and in \textcite{wikiavltree}, the `Delete'
 section, specifically the third paragraph, this is expected
 behaviour. Within the above web-articles they are specified as
-incurring at most two rotations however, in our implementation
-an LR or RL, although composed of two successive rotations is
-considered as one rotation.
+incurring at most two rotations, however, in our implementation
+an LR or RL rotation, although composed of two successive
+rotations, is considered as one rotation.
 
 \subsection{Balanced Trees vs.\ Skip Lists}
 
-The complexity of skip lists although identical to AVL and
-Red-Black trees, it is only so in a probabilistic sense. This
-means that the effectiveness of a skip lists is dependent on
-whether or not the source of randomness is truly random or not.
-Most pseudo-random number generators will probably have a bias
-and that bias needs to be tested to ensure that the tolerances
-are good enough to guarantee the time-complexities a skip list
-advertises.
+The time complexity of skip lists is probabilistically identical
+to AVL and Red-Black trees. This means that the effectiveness of
+a skip list is dependent on whether or not its source of
+randomness is truly random or not. Most pseudo-random number
+generators will probably have a bias and that bias needs to be
+tested to ensure that the tolerances are good enough to
+guarantee the time-complexities that a skip list advertises.
 
-Now the environment in which a skip list will operate will most
-certainly determine its effectiveness. In particular although it
-is not clear from the implementation the size of a skip list in
-terms of the number of instructions it takes up in a program is
-significantly smaller than that of an AVL or Red-Black tree.
+This means that the environment in which a skip list will
+operate will most certainly determine its effectiveness. A
+particularly well-suited example would be a memory constrained
+environment. This is because the size of a skip list in terms of
+the of instruction count is significantly smaller than that of
+an AVL or Red-Black tree.
 
-Hence, it might be useful to implement such skip lists in memory
-constrained environments. This of course will entail researching
-and benchmarking the performance of the Skip lists with a number
-of synthetic data sets that it might experience in the wild and
-whether the random number generation introduces any bias.
+However, this will still require researching and benchmarking
+the performance of a skip list. This can be done by using a
+number of data sets and by measuring the bias introduced by the
+random number generator.
 
 It is also crucial to point out that all three different data
-structures are not very cache friendly. They all use pointers
-which makes notoriously difficult for machines to increase their
-cache-hit rate, since they are not contiguous.
+structures are not very cache friendly. This is because
+cache-hit rate optimisation is hard for non-contiguous data
+structures such as the ones under consideration.
 
-Of course skip lists and the trees are fundamentally different
-types and hence they have different cache characteristics but
-none will ever be as cache-friendly as a fixed size array.
+Of course, skip lists and the trees are fundamentally different
+types and hence they might exhibit different cache
+characteristics but none will ever be as cache-friendly as a
+fixed size array.
 
-A slight note on thread-safety. As mentioned in this post on
+A slight note on thread-safety: as mentioned in this post on
 \url{https://stackoverflow.com/questions/256511}, locking
-locality can be a consideration. In particular skip list can be
+locality can be a consideration. In particular, skip list can be
 easily augmented to support multithreaded insertion. This is
-because for every insertion a skip list only needs to lock the
-two neighbouring skip nodes. However, as mentioned in the above
-post there do seem to exit lock-free Red-Black tree
-implementations.
+because for every insertion, a skip list only needs to lock the
+two neighbouring skip nodes. However, there do seem to exist
+lock-free Red-Black tree implementations.
 
 Moreover, the tree-based algorithms are guaranteed to give the
 performance they advertise. This is because
@@ -528,14 +525,13 @@ position, a skip list has higher levels of variation due to its
 probabilistic nature. This indicates a more uniform access time
 for AVL and Red-Black trees.
 
-Hence, as a final verdict in, when operating on normal general
-purpose computers, it is more appropriate to choose a tree-based
-data structure. Not only do modern computers
-have a enough memory to load the instructions required
-to implement the AVL trees or Red-Black trees, using
-a tree-based algorithm provides some level of guarantee.
-
-A skip list should be considered only when necessary.
+As a final verdict, when operating on normal general purpose
+computers, it is more appropriate to choose a tree-based data
+structure. Not only do modern computers have a enough memory to
+load the instructions required to implement AVL trees or
+Red-Black trees, but using a tree-based algorithm provides a
+non-probabilistic bound on the worst-case time-complexity.
+Hence, a skip list should be considered only when necessary.
 
 \subsection{AVL Trees vs.\ Red-Black Trees}
 
@@ -560,9 +556,9 @@ possible).}
 \end{figure}
 
 In particular in \textcite{pugh90}, specifically table 2, the
-author claims that AVL trees have an insertion time twice as
-slow as skip lists. However, according to the benchmark in
-Figure \ref{fig:benchmark}, this is actually not the case. In
+author claims that AVL trees have an insertion time roughly
+twice as slow as skip lists. However, according to the benchmark
+in Figure \ref{fig:benchmark}, this is actually not the case. In
 fact, AVL trees might actually be faster since the
 implementation used for this coursework does not stop early when
 inserting.
@@ -571,26 +567,26 @@ However, this might just be a matter of implementation. What
 matters is that this pushes the discussion in an interesting
 direction regarding, AVL trees and Red-Black trees.
 
-AVL trees as mentioned in \textcite{wikiavltree} are
+AVL trees, as mentioned in \textcite{wikiavltree} are
 more strictly balanced than Red-Black trees, making
 them more ideal for searching-intensive applications.
 
-Having said that the benchmark and statistics indicate that on
+Having said that, the benchmark and statistics indicate that on
 average Red-Black trees almost have the same height as AVL trees
 (see Listing in Section \ref{list:stats} and Figure
-\ref{fig:benchmark}). This means that in scenarios
-where no hard requirement on search speed is imposed
-both AVL trees and Red-Black trees perform well.
+\ref{fig:benchmark}). This means that in scenarios where no hard
+requirement on search speed is imposed, both AVL trees and
+Red-Black trees perform well.
 
-What pushes Red-Black trees over AVL trees is the fact that they
-are seemingly twice as fast AVL trees when inserting. It is
-quite possible that this speed up is due to the fact that
-although Red-Black trees can be longer than AVL trees they are
-on average equal in height and insertion is significantly faster
-since the moment a black parent is reached it is enough for the
-insertion algorithm to terminate. This means that there is no
-need for traversing the whole path all the way up to the root,
-which the current implementation of an AVL tree does.
+What pushes Red-Black trees over AVL trees is the fact that
+insertion is seemingly twice as fast. It is possible that this
+is the case because during `fixing', the algorithm can terminate
+when it reaches a black parent. This means that unlike the AVL
+tree implementation which traverses all the way up to root, the
+Red-Black tree implementation terminates early. Additionally,
+this speed up is more pronounced due to the fact that during
+testing Red-Black trees were capable of maintaining a similar
+height to AVL trees.
 
 \section{Conclusion}
 
@@ -598,15 +594,16 @@ Red-Black trees seem to be the most natural choice for a data
 structure with $O(\log n)$ time-complexity for all three types
 of operations, in the most general of environments. It only
 makes sense to use skip lists or AVL trees under the previously
-discussed scenarios which certain restrictions. 
+discussed scenarios. 
 
 Additionally, there are multiple examples of Red-Black trees
-being used where AVL trees and skip lists could be used instead,
-but are not. For example: the \CC{} \texttt{std::set} type,
-extensive use within the Linux kernel (see
-\url{https://www.kernel.org/doc/Documentation/rbtree.txt}) and
-probably many many more. That is to say that Red-Black trees are
-generally preferred over AVL trees or skip lists.
+being used instead of AVL trees or skip lists. This because
+Red-Black trees have better overall general characteristics.
+
+Some of the above mentioned examples are: the \CC{}
+\texttt{std::set} type, extensive use within the Linux kernel
+(see \url{https://www.kernel.org/doc/Documentation/rbtree.txt})
+and probably many many more.
 
 \printbibliography
 
