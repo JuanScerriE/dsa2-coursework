@@ -142,4 +142,5 @@ dmypy.json
 *.bbl
 *.dvi
 *.ps
+*.out
 *.run.xml
